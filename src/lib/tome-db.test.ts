@@ -9,6 +9,6 @@ const books = [b("1", "Zebra", 1, null), b("2", "Apple", 3, null, ["fruit"]), b(
 describe("library sort & search", () => {
   it("sorts by title", () => expect(sortAndFilter(books, "", "title").map((x) => x.id)).toEqual(["2", "3", "1"]));
   it("sorts by created, newest first", () => expect(sortAndFilter(books, "", "created").map((x) => x.id)).toEqual(["2", "3", "1"]));
-  it("recently opened comes first", () => expect(sortAndFilter(books, "", "recent")[0].id).toBe("3"));
+  it("recently opened comes first", () => expect(sortAndFilter(books, "", "recent")[0]?.id).toBe("3"));
   it("searches tags", () => expect(sortAndFilter(books, "fruit", "title").map((x) => x.id)).toEqual(["2"]));
 });
