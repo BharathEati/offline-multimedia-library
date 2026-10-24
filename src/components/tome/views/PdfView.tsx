@@ -18,14 +18,14 @@ export function usePdfDoc(blob: Blob | null) {
         const pdfjs = await loadPdfjs();
         loaded = await pdfjs.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
         if (live) setDoc(loaded);
-        else loaded.destroy();
+        else void loaded.cleanup();
       } catch {
         if (live) setErr("This PDF couldn't be opened. It may be damaged or password-protected.");
       }
     })();
     return () => {
       live = false;
-      loaded?.destroy();
+      void loaded?.cleanup();
     };
   }, [blob]);
   return { doc, err };
