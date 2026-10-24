@@ -62,14 +62,19 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.002 90);
+  --foreground: oklch(0.2 0.005 260);
+  --paper: oklch(0.995 0.003 90);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 6%), 0 8px 24px oklch(0 0 0 / 8%);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 8%), 0 18px 40px oklch(0 0 0 / 14%);
+  --font-ui: ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+  --font-read: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.22 0.005 260);
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
@@ -142,3 +147,46 @@
     color: var(--color-foreground);
   }
 }
+
+@layer base { body { font-family: var(--font-ui); -webkit-font-smoothing: antialiased; } }
+.tome-reading { font-family: var(--font-read); }
+.tome-display { font-family: var(--font-read); font-size: 2.25rem; letter-spacing: -0.01em; }
+.tome-wordmark { font-weight: 600; letter-spacing: -0.02em; font-size: 1.125rem; }
+.tome-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 1.5rem; justify-content: space-between; padding: 0.75rem 1.5rem; background: color-mix(in oklch, var(--background) 82%, transparent); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+.tome-search { flex: 1; max-width: 28rem; display: flex; align-items: center; gap: .5rem; padding: .4rem .75rem; border-radius: 999px; background: var(--secondary); }
+.tome-search input { flex: 1; background: transparent; outline: none; font-size: .875rem; }
+.tome-saved { font-size: .75rem; color: var(--muted-foreground); transition: opacity .3s; }
+.tome-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .9rem; border-radius: 999px; font-size: .875rem; font-weight: 500; transition: background .15s, transform .15s; }
+.tome-btn:hover { background: var(--secondary); }
+.tome-btn:focus-visible, .tome-grid-item:focus-visible, .tome-book3d:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.tome-btn-primary { background: var(--primary); color: var(--primary-foreground); }
+.tome-btn-primary:hover { background: color-mix(in oklch, var(--primary) 85%, var(--background)); }
+.tome-btn-danger { background: var(--destructive); color: var(--destructive-foreground); }
+.tome-select { font-size: .875rem; background: var(--secondary); border-radius: 999px; padding: .4rem .8rem; }
+.tome-segment { display: flex; background: var(--secondary); border-radius: 999px; padding: 3px; }
+.tome-segment button { padding: .3rem .6rem; border-radius: 999px; color: var(--muted-foreground); }
+.tome-segment button[aria-pressed="true"] { background: var(--paper); color: var(--foreground); box-shadow: var(--shadow-soft); }
+.tome-input { width: 100%; padding: .55rem .75rem; border-radius: calc(var(--radius) - 4px); border: 1px solid var(--border); background: var(--paper); outline: none; }
+.tome-input:focus { border-color: var(--ring); }
+.tome-empty { text-align: center; padding: 5rem 1rem; border: 1px dashed var(--border); border-radius: var(--radius); }
+.tome-cover { position: relative; aspect-ratio: 2/3; border-radius: 3px 6px 6px 3px; overflow: hidden; box-shadow: var(--shadow-soft); background: var(--paper); transition: transform .25s ease, box-shadow .25s ease; }
+.tome-cover-hover:hover, .tome-grid-item:focus-visible .tome-cover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.tome-cover-fallback { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: .6rem; padding: 14%; background: linear-gradient(160deg, oklch(0.93 0.035 var(--cover-hue)), oklch(0.82 0.06 var(--cover-hue))); color: oklch(0.25 0.04 var(--cover-hue)); }
+.tome-cover-title { font-family: var(--font-read); font-size: 1.05rem; line-height: 1.2; word-break: break-word; }
+.tome-cover-rule { width: 1.5rem; height: 1px; background: currentColor; opacity: .5; }
+.tome-cover-spine { position: absolute; inset: 0 auto 0 0; width: 6%; background: linear-gradient(90deg, oklch(0 0 0 / 18%), oklch(1 0 0 / 12%) 60%, transparent); }
+.tome-cover-pick { width: 6.5rem; aspect-ratio: 2/3; border-radius: 6px; border: 1px dashed var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; color: var(--muted-foreground); overflow: hidden; }
+.tome-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 1rem; background: oklch(0.2 0 0 / 30%); backdrop-filter: blur(6px); animation: tome-fade .2s ease; }
+.tome-dialog { width: 100%; max-width: 32rem; background: var(--paper); border-radius: calc(var(--radius) + 6px); padding: 1.5rem; box-shadow: var(--shadow-lift); animation: tome-rise .25s ease; }
+.tome-letter { max-width: 34rem; background: var(--paper); padding: 3.5rem 3rem; border-radius: 4px; box-shadow: var(--shadow-lift); line-height: 1.7; font-size: 1.05rem; display: flex; flex-direction: column; gap: 1rem; animation: tome-rise .4s ease; }
+.tome-letter-kicker { font-family: var(--font-ui); font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-foreground); }
+.tome-shelf { perspective: 1400px; }
+.tome-shelf-row { display: flex; flex-wrap: wrap; gap: 2.25rem; align-items: flex-end; padding: 0 1.5rem; transform-style: preserve-3d; }
+.tome-shelf-plank { height: 14px; margin-top: -2px; border-radius: 2px; background: linear-gradient(var(--secondary), color-mix(in oklch, var(--secondary) 70%, var(--foreground) 12%)); box-shadow: var(--shadow-soft); }
+.tome-book3d { position: relative; width: 8.5rem; transform-style: preserve-3d; transform: rotateY(-18deg); transition: transform .35s ease; }
+.tome-book3d:hover, .tome-book3d:focus-visible { transform: rotateY(-6deg) translateZ(30px) translateY(-6px); }
+.tome-book3d-front { transform: translateZ(10px); }
+.tome-book3d-pages { position: absolute; top: 2px; bottom: 2px; right: 0; width: 20px; transform: rotateY(90deg) translateZ(-10px); transform-origin: right; background: repeating-linear-gradient(90deg, var(--paper) 0 2px, var(--border) 2px 3px); }
+@keyframes tome-fade { from { opacity: 0 } }
+@keyframes tome-rise { from { opacity: 0; transform: translateY(8px) } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
