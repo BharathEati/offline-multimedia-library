@@ -13,8 +13,14 @@ const IDEAS_TEXT = `Some things people bind into books:
 Custom pages like this one mix text, images, audio and video in two widths. In Edit mode, hover a block to move it, resize it, or remove it.`;
 
 /** Builds the "A Tour of Tome" sample book shown on first launch. Text-only, so it works fully offline. */
-export async function seedSampleBook(): Promise<void> {
+let seeding: Promise<void> | null = null;
+
+export function seedSampleBook(): Promise<void> {
   // Idempotent: effects can fire twice in dev, never seed a second copy.
+  return (seeding ??= seed());
+}
+
+async function seed(): Promise<void> {
   if ((await listBooks()).some((b) => b.sample)) return;
   const book = await createBook("A Tour of Tome", null, { sample: true, tags: ["welcome"] });
   const now = Date.now();
