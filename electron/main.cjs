@@ -47,7 +47,10 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false);
 
   // In production load the static build file
-  const indexPath = path.join(__dirname, '../dist-desktop/index.html');
+    const indexPath = fs.existsSync(path.join(__dirname, 'index.html'))
+    ? path.join(__dirname, 'index.html')
+    : path.join(__dirname, '../dist-desktop/index.html');
+
   if (fs.existsSync(indexPath)) {
     mainWindow.loadFile(indexPath);
   } else {
