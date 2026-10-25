@@ -103,19 +103,23 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  color-scheme: dark;
+  --paper: oklch(0.23 0.002 260);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 20%), 0 8px 24px oklch(0 0 0 / 24%);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 24%), 0 18px 40px oklch(0 0 0 / 35%);
+  --background: oklch(0.18 0.002 260);
   --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
+  --card: oklch(0.23 0.002 260);
   --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
+  --popover: oklch(0.23 0.002 260);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.929 0.013 255.508);
   --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
+  --secondary: oklch(0.29 0.002 260);
   --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
+  --muted: oklch(0.29 0.002 260);
   --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
+  --accent: oklch(0.29 0.002 260);
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
@@ -292,5 +296,16 @@
 .tome-note-text { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: .4rem; width: 12rem; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-lift); padding: .5rem; font-size: .8rem; }
 .tome-note-text textarea { width: 100%; background: transparent; border: none; outline: none; resize: vertical; font-size: .8rem; }
 .tome-db { font-size: .75rem; color: var(--muted-foreground); }
+
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+.tome-display, .tome-wordmark { letter-spacing: 0; }
+.tome-dialog { max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.tome-search, .tome-search input { min-width: 0; }
+@media (max-width: 640px) {
+  .tome-header { flex-wrap: wrap; gap: .5rem; padding: .75rem; }
+  .tome-search { order: 3; flex-basis: 100%; max-width: none; }
+  .tome-saved { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

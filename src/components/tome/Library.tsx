@@ -8,6 +8,7 @@ import {
 import { BookCover } from "./BookCover";
 import { WelcomeLetter } from "./WelcomeLetter";
 import { seedSampleBook } from "@/lib/sample";
+import { AppSettings } from "./AppSettings";
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -75,6 +76,7 @@ export function Library() {
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search books, tags, collections" aria-label="Search" />
         </div>
         <div className="flex items-center gap-2">
+          <AppSettings />
           <span className={`tome-saved ${saved ? "opacity-100" : "opacity-0"}`}>Saved</span>
           <button className="tome-btn tome-btn-primary" onClick={() => setCreating(true)}>
             <Plus className="h-4 w-4" /> New book

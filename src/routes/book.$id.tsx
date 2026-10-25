@@ -19,7 +19,7 @@ export const Route = createFileRoute("/book/$id")({
   component: BookPage,
 });
 
-function BookPage() {
+export function BookPage() {
   const { id } = Route.useParams();
   const [book, setBook] = useState<Book | null | undefined>(undefined);
   const [items, setItems] = useState<Item[]>([]);
