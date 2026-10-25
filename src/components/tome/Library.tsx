@@ -134,6 +134,8 @@ export function Library() {
         )}
       </main>
 
+      <StorageFootnote />
+
       {creating && <CreateDialog onClose={() => setCreating(false)} onCreate={async (t, c) => { await createBook(t, c); setCreating(false); refresh(); flashSaved(); }} />}
       {selected && (
         <BookSheet

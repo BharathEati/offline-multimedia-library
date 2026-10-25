@@ -7,11 +7,11 @@
 
 ## Milestones
 1. ✅ Foundation: design system, local DB, library grid + CSS 3D shelf, create/rename/delete, covers (original kept), collections, tags, search, sort, welcome letter, auto-save.
-2. Import pipeline (copy-on-import, dedupe by hash, progress, errors) + content list.
-3. Reader: PDF, images, audio/video with position restore, TXT/MD, page flip.
-4. EPUB + DOCX rendering.
-5. Editors: scrapbook block pages, PDF thumbnail editor, page ops, annotations.
-6. Sample book, polish, Electron packaging, release docs.
+2. ✅ Import pipeline (copy-on-import, dedupe by hash, progress, errors) + content list.
+3. ✅ Reader: PDF, images, audio/video with position restore, TXT/MD, page-turn transitions.
+4. ✅ EPUB + DOCX rendering.
+5. ✅ Editors: scrapbook block pages, PDF thumbnail editor, page ops, annotations.
+6. ⏳ Sample book (✅ seeded on first launch), storage footnote (✅), Electron packaging, release docs.
 
 ## Risks / trade-offs
 - Unsigned builds show OS warnings (Windows SmartScreen, macOS Gatekeeper) until signing certificates + notarization are added.
