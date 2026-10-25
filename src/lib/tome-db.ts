@@ -130,9 +130,10 @@ export async function createBook(title: string, cover: Blob | null, extra: Parti
 }
 
 export async function replaceCover(book: Book, cover: Blob): Promise<Book> {
-  const next = { ...book, coverId: uid(), updatedAt: Date.now() };
+  const coverId = uid();
+  const next = { ...book, coverId, updatedAt: Date.now() };
   await tx(["books", "assets"], "readwrite", (t) => {
-    t.objectStore("assets").put(cover, next.coverId!);
+    t.objectStore("assets").put(cover, coverId);
     if (book.coverId) t.objectStore("assets").delete(book.coverId);
     t.objectStore("books").put(next);
   });
@@ -210,6 +211,15 @@ export const setMeta = (key: string, value: unknown) =>
   tx(["meta"], "readwrite", (t) => {
     t.objectStore("meta").put(value, key);
   });
+
+/** Clear every Tome store together. Source files outside Tome are never accessed. */
+export async function clearAppData() {
+  await tx(["books", "items", "assets", "meta"], "readwrite", (t) => {
+    for (const store of ["books", "items", "assets", "meta"]) t.objectStore(store).clear();
+    // Keep the resulting library empty instead of re-importing the tour on restart.
+    t.objectStore("meta").put(true, "welcomed");
+  });
+}
 
 // ---------- library helpers ----------
 export type SortKey = "recent" | "title" | "created";
