@@ -42,7 +42,10 @@ export function PageEditor({ item, allItems, onItem }: { item: Item; allItems: I
   }, []);
 
   const add = (type: BlockType) => {
-    if (type === "text") return save([...blocks, { id: uid(), type, text: "", width: "full" }]);
+    if (type === "text") {
+      void save([...blocks, { id: uid(), type, text: "", width: "full" }]);
+      return;
+    }
     pending.current = type;
     if (fileIn.current) { fileIn.current.accept = ACCEPTS[type]; fileIn.current.click(); }
   };
