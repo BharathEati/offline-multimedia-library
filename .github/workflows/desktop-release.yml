@@ -1,0 +1,42 @@
+name: Desktop Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        run: |
+          npm run package:win
+          Compress-Archive -Path release-builds/Tome-win32-x64/* -DestinationPath Tome-Windows.zip
+
+      - name: Build macOS
+        if: runner.os == 'macOS'
+        run: |
+          npm run package:mac
+          zip -r Tome-macOS.zip release-builds/Tome-darwin-*
+
+      - name: Upload Release Artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Tome-Windows.zip
+            Tome-macOS.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

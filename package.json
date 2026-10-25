@@ -4,6 +4,10 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "build:desktop": "vite build --config vite.desktop.config.mjs",
+    "start:electron": "electron electron/main.cjs",
+    "package:win": "npm run build:desktop && electron-packager dist-desktop Tome --platform=win32 --arch=x64 --out=release-builds --overwrite",
+    "package:mac": "npm run build:desktop && electron-packager dist-desktop Tome --platform=darwin --arch=universal --out=release-builds --overwrite",
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
