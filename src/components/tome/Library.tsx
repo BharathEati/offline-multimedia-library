@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Plus, Search, Trash2, ImageUp, LayoutGrid, Library as Shelf } from "lucide-react";
 import {
   createBook, deleteBook, getMeta, listBooks, putBook, replaceCover, setMeta, sortAndFilter,
