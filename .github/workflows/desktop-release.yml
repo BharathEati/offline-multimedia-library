@@ -37,8 +37,6 @@ jobs:
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            Tome-Windows.zip
-            Tome-macOS.zip
+          files: Tome-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
