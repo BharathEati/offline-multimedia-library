@@ -1,4 +1,4 @@
-import { createBook, putItems, uid, type Item } from "./tome-db";
+import { createBook, listBooks, putItems, uid, type Item } from "./tome-db";
 
 const WELCOME_TEXT = `This is a Tome book. Everything you see lives on this computer — no accounts, no cloud, no tracking.
 
@@ -14,6 +14,8 @@ Custom pages like this one mix text, images, audio and video in two widths. In E
 
 /** Builds the "A Tour of Tome" sample book shown on first launch. Text-only, so it works fully offline. */
 export async function seedSampleBook(): Promise<void> {
+  // Idempotent: effects can fire twice in dev, never seed a second copy.
+  if ((await listBooks()).some((b) => b.sample)) return;
   const book = await createBook("A Tour of Tome", null, { sample: true, tags: ["welcome"] });
   const now = Date.now();
   const items: Item[] = [
