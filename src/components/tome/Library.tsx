@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Plus, Search, Trash2, ImageUp, LayoutGrid, Library as Shelf } from "lucide-react";
 import {
   createBook, deleteBook, getMeta, listBooks, putBook, replaceCover, setMeta, sortAndFilter,
@@ -6,6 +7,36 @@ import {
 } from "@/lib/tome-db";
 import { BookCover } from "./BookCover";
 import { WelcomeLetter } from "./WelcomeLetter";
+import { seedSampleBook } from "@/lib/sample";
+
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  const units = ["KB", "MB", "GB", "TB"];
+  let v = n;
+  let u = -1;
+  do { v /= 1024; u++; } while (v >= 1024 && u < units.length - 1);
+  return `${v.toFixed(v >= 10 ? 0 : 1)} ${units[u]}`;
+}
+
+function StorageFootnote() {
+  const [est, setEst] = useState<{ usage: number; quota: number } | null>(null);
+  useEffect(() => {
+    let live = true;
+    const read = () => navigator.storage?.estimate?.().then((e) => {
+      if (live && e && e.quota) setEst({ usage: e.usage ?? 0, quota: e.quota });
+    }).catch(() => {});
+    read();
+    window.addEventListener("tome-saved", read);
+    return () => { live = false; window.removeEventListener("tome-saved", read); };
+  }, []);
+  if (!est) return null;
+  const pct = Math.min(100, Math.round((est.usage / est.quota) * 100));
+  return (
+    <footer className="mx-auto max-w-6xl px-6 pb-10">
+      <p className="tome-db">Tome is using {formatBytes(est.usage)} of about {formatBytes(est.quota)} available on this device ({pct}%). Everything is stored locally.</p>
+    </footer>
+  );
+}
 
 export function Library() {
   const [books, setBooks] = useState<Book[] | null>(null);
@@ -21,8 +52,13 @@ export function Library() {
   const flashSaved = () => { setSaved(true); setTimeout(() => setSaved(false), 1200); };
 
   useEffect(() => {
-    refresh();
-    getMeta<boolean>("welcomed").then((w) => !w && setWelcome(true));
+    getMeta<boolean>("welcomed").then(async (w) => {
+      if (!w) {
+        await seedSampleBook();
+        setWelcome(true);
+      }
+      refresh();
+    });
     getMeta<"grid" | "shelf">("view").then((v) => v && setView(v));
   }, []);
 
@@ -98,6 +134,8 @@ export function Library() {
         )}
       </main>
 
+      <StorageFootnote />
+
       {creating && <CreateDialog onClose={() => setCreating(false)} onCreate={async (t, c) => { await createBook(t, c); setCreating(false); refresh(); flashSaved(); }} />}
       {selected && (
         <BookSheet
@@ -144,6 +182,7 @@ function CreateDialog({ onClose, onCreate }: { onClose: () => void; onCreate: (t
 }
 
 function BookSheet({ book, onClose, onChange, onDeleted }: { book: Book; onClose: () => void; onChange: (b: Book) => void; onDeleted: () => void }) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(book.title);
   const [tags, setTags] = useState(book.tags.join(", "));
   const [collection, setCollection] = useState(book.collection ?? "");
@@ -174,8 +213,8 @@ function BookSheet({ book, onClose, onChange, onDeleted }: { book: Book; onClose
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Title</span><input className="tome-input mt-1" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Collection</span><input className="tome-input mt-1" value={collection} onChange={(e) => setCollection(e.target.value)} placeholder="e.g. Research" /></label>
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Tags</span><input className="tome-input mt-1" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="comma, separated" /></label>
-            <button className="tome-btn tome-btn-primary w-full justify-center" onClick={async () => { await putBook({ ...book, openedAt: Date.now() }); onClose(); }} title="Reader arrives in milestone 3">
-              Open (reader coming next)
+            <button className="tome-btn tome-btn-primary w-full justify-center" onClick={async () => { await putBook({ ...book, openedAt: Date.now() }); onClose(); navigate({ to: "/book/$id", params: { id: book.id } }); }}>
+              Open
             </button>
           </div>
         </div>

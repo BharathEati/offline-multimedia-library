@@ -81,7 +81,7 @@ export function PdfView({
       c.width = Math.floor(vp.width);
       c.height = Math.floor(vp.height);
       setSize({ w: vp.width / dpr, h: vp.height / dpr });
-      task = p.render({ canvas: c, canvasContext: c.getContext("2d")!, viewport: vp });
+      task = p.render({ canvasContext: c.getContext("2d")!, viewport: vp });
       await task.promise.catch(() => {});
     })();
     return () => {
@@ -129,7 +129,7 @@ export function PdfThumb({ doc, index }: { doc: PDFDocumentProxy; index: number 
       const vp = p.getViewport({ scale: 260 / v1.width });
       c.width = vp.width;
       c.height = vp.height;
-      task = p.render({ canvas: c, canvasContext: c.getContext("2d")!, viewport: vp });
+      task = p.render({ canvasContext: c.getContext("2d")!, viewport: vp });
       task.promise.catch(() => {});
     });
     return () => {

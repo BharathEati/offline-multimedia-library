@@ -189,4 +189,108 @@
 .tome-book3d-pages { position: absolute; top: 2px; bottom: 2px; right: 0; width: 20px; transform: rotateY(90deg) translateZ(-10px); transform-origin: right; background: repeating-linear-gradient(90deg, var(--paper) 0 2px, var(--border) 2px 3px); }
 @keyframes tome-fade { from { opacity: 0 } }
 @keyframes tome-rise { from { opacity: 0; transform: translateY(8px) } }
+
+/* ---------- Reader ---------- */
+.tome-reader { display: flex; flex-direction: column; height: 100vh; }
+.tome-reader-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1.25rem; border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--background) 85%, transparent); backdrop-filter: blur(16px); }
+.tome-reader-stage { position: relative; flex: 1; min-height: 0; display: flex; }
+.tome-reader-foot { padding: .5rem 1.25rem; text-align: center; font-size: .75rem; color: var(--muted-foreground); border-top: 1px solid var(--border); }
+.tome-item { flex: 1; min-width: 0; display: flex; }
+.tome-side { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: var(--paper); box-shadow: var(--shadow-soft); color: var(--muted-foreground); transition: color .15s, transform .15s; }
+.tome-side:hover:not(:disabled) { color: var(--foreground); transform: translateY(-50%) scale(1.06); }
+.tome-side:disabled { opacity: .3; }
+.tome-side-left { left: 1rem; }
+.tome-side-right { right: 1rem; }
+.tome-turn-next { animation: tome-turn-next .3s ease; }
+.tome-turn-prev { animation: tome-turn-prev .3s ease; }
+@keyframes tome-turn-next { from { opacity: 0; transform: translateX(18px) } }
+@keyframes tome-turn-prev { from { opacity: 0; transform: translateX(-18px) } }
+
+/* ---------- Shared view pieces ---------- */
+.tome-loading { width: 2rem; height: 2rem; border-radius: 999px; border: 2px solid var(--border); border-top-color: var(--foreground); animation: tome-spin .8s linear infinite; }
+@keyframes tome-spin { to { transform: rotate(360deg) } }
+.tome-problem { margin: auto; max-width: 26rem; padding: 1.25rem 1.5rem; text-align: center; font-size: .9rem; color: var(--muted-foreground); border: 1px dashed var(--border); border-radius: var(--radius); }
+.tome-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 2.5rem 1.5rem 4rem; }
+.tome-paper { max-width: 42rem; margin: 0 auto; background: var(--paper); border-radius: 4px; box-shadow: var(--shadow-soft); padding: 3rem 3.25rem; }
+.tome-prose { font-family: var(--font-read); font-size: 1.05rem; line-height: 1.75; }
+.tome-prose h1, .tome-prose h2, .tome-prose h3 { font-family: var(--font-read); line-height: 1.25; margin: 1.4em 0 .5em; }
+.tome-prose h1 { font-size: 1.6rem; } .tome-prose h2 { font-size: 1.3rem; } .tome-prose h3 { font-size: 1.1rem; }
+.tome-prose p { margin: .8em 0; }
+.tome-prose ul, .tome-prose ol { margin: .8em 0; padding-left: 1.4em; }
+.tome-prose ul { list-style: disc; } .tome-prose ol { list-style: decimal; }
+.tome-prose blockquote { border-left: 3px solid var(--border); padding-left: 1rem; color: var(--muted-foreground); margin: 1em 0; }
+.tome-prose code { font-family: ui-monospace, monospace; font-size: .88em; background: var(--secondary); border-radius: 4px; padding: .1em .35em; }
+.tome-prose pre { background: var(--secondary); border-radius: var(--radius); padding: 1rem; overflow-x: auto; margin: 1em 0; }
+.tome-prose pre code { background: none; padding: 0; }
+.tome-prose img { max-width: 100%; border-radius: 6px; }
+.tome-prose a { color: var(--ring); text-decoration: underline; }
+.tome-image-box { flex: 1; min-height: 0; overflow: auto; display: grid; place-items: center; padding: 2rem; }
+.tome-image { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: var(--shadow-soft); }
+.tome-media-box { flex: 1; display: grid; place-items: center; padding: 2rem; }
+.tome-audio { width: 100%; max-width: 26rem; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow-soft); padding: 1.5rem; }
+.tome-audio-title { font-family: var(--font-read); font-size: 1.1rem; margin-bottom: .75rem; }
+.tome-video { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: var(--shadow-lift); background: oklch(0.15 0 0); }
+.tome-docx { background: var(--secondary); }
+.tome-docx .docx-wrapper { background: transparent; padding: 0; }
+.tome-docx .docx-wrapper > section.docx { box-shadow: var(--shadow-soft); margin-bottom: 2rem; }
+
+/* ---------- EPUB ---------- */
+.tome-epub { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 1.5rem; }
+.tome-epub-toc { position: absolute; top: 1.75rem; right: 2rem; z-index: 4; max-width: 14rem; }
+.tome-epub-page { flex: 1; min-height: 0; max-width: 46rem; width: 100%; padding: 1rem 2rem; overflow: hidden; }
+.tome-epub-nav { position: absolute; bottom: 1.75rem; right: 2rem; display: flex; gap: .5rem; }
+
+/* ---------- Custom pages ---------- */
+.tome-custom-page { display: flex; flex-wrap: wrap; gap: 1.25rem; align-content: flex-start; }
+.tome-block-full { flex-basis: 100%; }
+.tome-block-half { flex-basis: calc(50% - .625rem); min-width: 14rem; flex-grow: 1; }
+.tome-block-image { width: 100%; border-radius: 6px; }
+.tome-block-text { width: 100%; background: transparent; border: none; outline: none; resize: none; font-family: var(--font-read); font-size: 1.05rem; line-height: 1.75; }
+.tome-page-editing .tome-edit-block { position: relative; border: 1px dashed transparent; border-radius: 8px; padding: .5rem; transition: border-color .15s; }
+.tome-page-editing .tome-edit-block:hover { border-color: var(--border); }
+.tome-block-tools { position: absolute; top: -.8rem; right: .5rem; z-index: 3; display: none; gap: 2px; background: var(--paper); border: 1px solid var(--border); border-radius: 999px; padding: 2px; box-shadow: var(--shadow-soft); }
+.tome-edit-block:hover .tome-block-tools { display: flex; }
+.tome-block-tools button { padding: .3rem; border-radius: 999px; color: var(--muted-foreground); }
+.tome-block-tools button:hover:not(:disabled) { background: var(--secondary); color: var(--foreground); }
+.tome-block-tools button:disabled { opacity: .3; }
+.tome-add-blocks { display: flex; align-items: center; justify-content: center; gap: .5rem; padding: 1rem; }
+
+/* ---------- Editor ---------- */
+.tome-editor { display: flex; height: 100vh; }
+.tome-editor-side { width: 19rem; shrink: 0; flex-shrink: 0; overflow-y: auto; border-right: 1px solid var(--border); padding: 1rem 1.25rem 2rem; }
+.tome-editor-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.tome-editor-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1.25rem; border-bottom: 1px solid var(--border); }
+.tome-editor-body { flex: 1; min-height: 0; display: flex; }
+.tome-editor-body > * { flex: 1; min-width: 0; }
+.tome-title-input { width: 100%; background: transparent; border: none; outline: none; font-weight: 600; font-size: .95rem; border-radius: 4px; }
+.tome-title-input:focus { background: var(--secondary); }
+.tome-chip { flex-shrink: 0; font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; background: var(--secondary); color: var(--muted-foreground); border-radius: 999px; padding: .2rem .6rem; }
+.tome-btn-outline { border: 1px solid var(--border); }
+.tome-progress { height: 4px; border-radius: 999px; background: var(--secondary); overflow: hidden; }
+.tome-progress span { display: block; height: 100%; background: var(--primary); border-radius: 999px; transition: width .2s; }
+.tome-errors { margin-top: .75rem; font-size: .8rem; color: var(--destructive); display: flex; flex-direction: column; gap: .25rem; }
+.tome-list-item { display: flex; align-items: center; gap: .4rem; padding: .35rem .5rem; border-radius: 8px; }
+.tome-list-item:hover { background: var(--secondary); }
+.tome-list-item.is-active { background: var(--secondary); box-shadow: inset 2px 0 0 var(--primary); }
+.tome-list-actions { display: none; gap: 2px; }
+.tome-list-item:hover .tome-list-actions { display: flex; }
+.tome-list-actions button { padding: .2rem; border-radius: 4px; color: var(--muted-foreground); }
+.tome-list-actions button:hover { background: var(--paper); color: var(--foreground); }
+
+/* ---------- PDF viewer / editor ---------- */
+.tome-pdf-box { position: relative; flex: 1; min-height: 0; display: grid; place-items: center; overflow: hidden; padding: 1.5rem; }
+.tome-pdf-page { position: relative; box-shadow: var(--shadow-lift); border-radius: 2px; overflow: hidden; background: var(--paper); }
+.tome-thumbs { width: 7.5rem; flex-shrink: 0; overflow-y: auto; border-right: 1px solid var(--border); padding: .75rem; display: flex; flex-direction: column; gap: .75rem; }
+.tome-thumb { position: relative; border-radius: 4px; overflow: hidden; border: 2px solid transparent; }
+.tome-thumb.is-active { border-color: var(--ring); }
+.tome-thumb-canvas { width: 100%; display: block; }
+.tome-thumb-num { position: absolute; bottom: 2px; right: 4px; font-size: .65rem; background: oklch(0.2 0 0 / 60%); color: oklch(0.98 0 0); border-radius: 4px; padding: 0 .3rem; }
+.tome-toolbar { display: flex; align-items: center; gap: .35rem; padding: .5rem .75rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.tome-toolbar button[aria-pressed="true"] { background: var(--secondary); }
+.tome-note { position: absolute; transform: translate(-50%, -100%); }
+.tome-note-pin { width: 1.4rem; height: 1.4rem; border-radius: 999px 999px 999px 0; transform: rotate(-45deg); background: oklch(0.75 0.15 85); border: 1px solid oklch(0.55 0.12 85); box-shadow: var(--shadow-soft); cursor: pointer; }
+.tome-note-text { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: .4rem; width: 12rem; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-lift); padding: .5rem; font-size: .8rem; }
+.tome-note-text textarea { width: 100%; background: transparent; border: none; outline: none; resize: vertical; font-size: .8rem; }
+.tome-db { font-size: .75rem; color: var(--muted-foreground); }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
