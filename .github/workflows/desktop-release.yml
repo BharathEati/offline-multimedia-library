@@ -18,20 +18,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - run: npm install
 
       - name: Build Windows
         if: runner.os == 'Windows'
         run: |
-          npm run package:win
+          npm run build:desktop
+          node -e "const fs=require('fs');fs.copyFileSync('electron/main.cjs','dist-desktop/main.cjs');fs.writeFileSync('dist-desktop/package.json',JSON.stringify({name:'Tome',version:'1.0.0',main:'main.cjs',devDependencies:{electron:'45.0.0'}}));"
+          npx electron-packager dist-desktop Tome --platform=win32 --arch=x64 --out=release-builds --overwrite
           Compress-Archive -Path release-builds/Tome-win32-x64/* -DestinationPath Tome-Windows.zip
 
       - name: Build macOS
         if: runner.os == 'macOS'
         run: |
-          npm run package:mac
+          npm run build:desktop
+          node -e "const fs=require('fs');fs.copyFileSync('electron/main.cjs','dist-desktop/main.cjs');fs.writeFileSync('dist-desktop/package.json',JSON.stringify({name:'Tome',version:'1.0.0',main:'main.cjs',devDependencies:{electron:'45.0.0'}}));"
+          npx electron-packager dist-desktop Tome --platform=darwin --arch=x64 --out=release-builds --overwrite
           zip -r Tome-macOS.zip release-builds/Tome-darwin-*
 
       - name: Upload Release Artifacts
