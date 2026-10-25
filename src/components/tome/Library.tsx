@@ -145,6 +145,7 @@ function CreateDialog({ onClose, onCreate }: { onClose: () => void; onCreate: (t
 }
 
 function BookSheet({ book, onClose, onChange, onDeleted }: { book: Book; onClose: () => void; onChange: (b: Book) => void; onDeleted: () => void }) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(book.title);
   const [tags, setTags] = useState(book.tags.join(", "));
   const [collection, setCollection] = useState(book.collection ?? "");
@@ -175,8 +176,8 @@ function BookSheet({ book, onClose, onChange, onDeleted }: { book: Book; onClose
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Title</span><input className="tome-input mt-1" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Collection</span><input className="tome-input mt-1" value={collection} onChange={(e) => setCollection(e.target.value)} placeholder="e.g. Research" /></label>
             <label className="block"><span className="text-xs font-medium text-muted-foreground">Tags</span><input className="tome-input mt-1" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="comma, separated" /></label>
-            <button className="tome-btn tome-btn-primary w-full justify-center" onClick={async () => { await putBook({ ...book, openedAt: Date.now() }); onClose(); }} title="Reader arrives in milestone 3">
-              Open (reader coming next)
+            <button className="tome-btn tome-btn-primary w-full justify-center" onClick={async () => { await putBook({ ...book, openedAt: Date.now() }); onClose(); navigate({ to: "/book/$id", params: { id: book.id } }); }}>
+              Open
             </button>
           </div>
         </div>
